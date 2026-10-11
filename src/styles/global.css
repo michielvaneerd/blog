@@ -18,6 +18,10 @@ a {
     color: #3B429F;
 }
 
+.article-content ul {
+    margin-left: 1.4rem;
+}
+
 p,
 h2,
 h3,
@@ -26,7 +30,7 @@ h5,
 h6,
 pre.astro-code,
 table {
-    margin-top: 2rem;
+    margin-top: 1.6rem;
 }
 
 .blog-post-list p {
@@ -124,7 +128,7 @@ ul.blog-post-list li {
     margin-top: .4rem;
 }
 
-p {
+.article-content {
     line-height: 1.8;
 }
 
