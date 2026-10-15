@@ -1,0 +1,101 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><meta name="generator" content="Astro v7.3.5"><meta name="author" content="Michiel van Eerd"><link rel="icon" href="/blog/favicon.svg" type="image/svg+xml"><title>Programmed RAG vs RAG as a tool</title><link href="/blog/pagefind/pagefind-component-ui.css" rel="stylesheet"><script src="/blog/pagefind/pagefind-component-ui.js" type="module"></script><style>*{margin:0;padding:0}html{justify-content:center;display:flex}body{max-width:60rem;margin:0;font-family:sans-serif}a{color:#3b429f}.article-content ul{margin-left:1.4rem}p,h2,h3,h4,h5,h6,pre.astro-code,table{margin-top:1.6rem}.blog-post-list p{margin-top:1rem}table{border-collapse:collapse;table-layout:fixed;border:1px solid #ccc;width:100%}th,td{border:1px solid #ccc;padding:.5rem}th{text-align:left;background-color:#f0f8ff}pre.astro-code{padding:1rem;line-height:1.5}h2,h3,h4,h5,h6{color:#5f9ea0}.blog-post-list h2{margin:0}header h1{font-size:1rem;font-weight:400}.article-tags a,nav a,.blog-post-list a{text-decoration:none}.article-tags a:hover,nav a:hover,.blog-post-list a:hover{text-decoration:underline}header,nav,main,footer{padding:1rem}nav ul{column-gap:1rem;display:flex}.search-box{margin-top:1rem}@media screen and (width>=40rem){nav{justify-content:space-between;align-items:center;display:flex}.search-box{margin-top:0}}nav li,ul.blog-post-list li{list-style:none}.article-dates{opacity:.8;margin-top:.4rem;font-size:smaller}.article-content{line-height:1.8}ul.blog-post-list li{margin-bottom:3rem}ul.article-tags{column-gap:1rem;margin-top:1rem;font-size:smaller;display:flex}ul.article-tags li{list-style:none}ul.article-tags li a{background-color:#f0f8ff;border-radius:.8rem;padding:.2rem .8rem;display:block}.pagination{column-gap:.2rem;display:flex}.pagination a{text-align:center;background-color:#f0f8ff;flex:1;padding:.2rem}h1.selected-tag-title{margin-bottom:1rem;font-size:100%;font-weight:400}.pagination-total{text-align:right;opacity:.8;margin-top:1rem;font-size:smaller}
+</style></head><body><header><h1>Website</h1></header><nav><ul><li><a href="/blog/posts">Home</a></li><li><a href="/blog/tags">Tags</a></li></ul><div class="search-box"><pagefind-config bundle-path="/blog/pagefind/"></pagefind-config><pagefind-modal-trigger></pagefind-modal-trigger><pagefind-modal></pagefind-modal></div></nav><main><article><h1 data-pagefind-meta="title">Programmed RAG vs RAG as a tool</h1><section class="article-info"><div class="article-dates">Published on <time datetime="Sun Oct 11 2026 02:00:00 GMT+0200 (Central European Summer Time)">Sun Oct 11 2026</time></div><ul class="article-tags"><li><a href="/blog/tags/ai">ai</a></li><li><a href="/blog/tags/rag">rag</a></li></ul></section><div data-pagefind-body class="article-content"><p>RAG (Retrieval Augmenented Generation) kan op verschillende manieren geimplementeerd worden:</p>
+<ul>
+<li>RAG as a tool (Agentic RAG) - Je geeft de retrieval functie als een tool mee aan de LLM. De LLM bepaalt dan zelf wanneer en hoe deze wordt aangeroepen.</li>
+<li>Programmed RAG (Traditional, Linear RAG) - Je programmeert de flow van wanneer en hoe de retrieval wordt gedaan zelf (hard) in de code.</li>
+</ul>
+<h2 id="programmed-rag">Programmed RAG</h2>
+<ul>
+<li>Elke vraag-antwoord gaat het van te voren geprogrammeerde flow in. Bijv. prompt =&gt; embed =&gt; retrieve =&gt; augment =&gt; generate</li>
+<li>Een slechte retrieval geeft meteen slecht antwoord</li>
+<li>Is dus strikt en zeer controleerbaar</li>
+<li>Je moet zelf VEEL werk doen (rephrase).</li>
+<li>Vaak sneller (flow is bekend en strikt).</li>
+</ul>
+<h2 id="rag-as-a-tool">RAG as a tool</h2>
+<ul>
+<li>De LLM bepaalt zelf wanneer en hoe de retrieve functie wordt aangeroepen. Dus prompt + tool =&gt; (LLM tool call * X) =&gt; generate</li>
+<li>De LLM doet eigenlijk al het werk</li>
+<li>Als de LLM in eerste instantie slechte retrieval heeft, dan kan het opnieuw een retrieve tool call doen (dus zonder dat er generate is gedaan) met een andere query. Dus antwoord dat uiteindelijk gegeven wordt, kan betere kwaliteit hebben.</li>
+<li>Bij niet-vragen, zoals “Bedankt” kan de LLM zelf bepale dat het niet nodig is om een tool call te doen.</li>
+<li>Kan hogere kosten en latency opleveren, omdat niet ekend is hoeveel tool calls er gedaan qorden.</li>
+</ul>
+<p>The core difference between Programmed RAG (often called Traditional or Linear RAG) and RAG as a Tool (Agentic RAG) lies in where the decision-making authority lives. [1, 2]
+In a Programmed RAG system, the orchestration logic is entirely written in hardcoded application code (e.g., Python scripts using LangChain or LlamaIndex). In contrast, RAG as a Tool turns the retrieval pipeline into a function that a Large Language Model (LLM) autonomously decides to call, refine, or skip based on real-time reasoning. [1, 3, 4, 5]</p>
+<hr>
+<p>Google AI result:</p>
+<ul>
+<li><a href="https://arxiv.org/html/2601.07711v1#A1">https://arxiv.org/html/2601.07711v1#A1</a> ==&gt; Hierin verschil tussen beide typen + voorbeelden van prompts.</li>
+<li><a href="https://www.progress.com/blogs/agentic-rag-vs-traditional-rag">https://www.progress.com/blogs/agentic-rag-vs-traditional-rag</a></li>
+<li><a href="https://blog.gitbutler.com/mcp-vs-rag">https://blog.gitbutler.com/mcp-vs-rag</a></li>
+</ul>
+<h2 id="direct-architectural-comparison">Direct Architectural Comparison</h2>
+<table>
+<thead>
+<tr>
+<th>Dimension</th>
+<th>Programmed RAG (Traditional)</th>
+<th>RAG as a Tool (Agentic)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Control Flow</td>
+<td>Deterministic &amp; Linear. Follows a strict code path: Embed → Retrieve → Augment → Generate.</td>
+<td>Dynamic &amp; Iterative. The LLM controls a loop, deciding if it needs to search and when to stop.</td>
+</tr>
+<tr>
+<td>Query Handling</td>
+<td>Passes the raw user query directly to the vector database or search index.</td>
+<td>The LLM can decompose complex prompts into sub-queries or rewrite them for better accuracy.</td>
+</tr>
+<tr>
+<td>Error Recovery</td>
+<td>None. If the vector search returns irrelevant results, the LLM generates a poor response from bad context.</td>
+<td>Self-Correcting. The LLM evaluates the search results and can choose to run a new search with a modified query.</td>
+</tr>
+<tr>
+<td>Complexity &amp; Cost</td>
+<td>Low latency, low token usage, and very few moving parts. Highly predictable.</td>
+<td>Higher latency and token costs due to multiple LLM reasoning cycles before an answer is produced.</td>
+</tr>
+<tr>
+<td>Integration Pattern</td>
+<td>The application wraps the LLM.</td>
+<td>The LLM acts as the central router using Tool Calling / Function Calling protocols.</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="deep-dive-programmed-rag">Deep Dive: Programmed RAG</h2>
+<p>In a programmed architecture, the developer pre-determines the exact steps the system will take. [4]</p>
+<ul>
+<li>How it works: The user types a question. Your backend code immediately passes that text to an embedding model, queries a vector database (like Pinecone or pgvector), grabs the top 3 results, builds a prompt template, and sends it to the LLM. [6]</li>
+<li>The limitation: The LLM has no say in what data it receives. If a user asks a multi-part question (e.g., “Compare our Q3 sales against our compliance manual guidelines”), a single programmed vector lookup will likely pull a messy mix of pages, failing to answer either part comprehensively. [1, 4]</li>
+<li>Best use case: High-speed, single-topic Q&amp;A environments, such as a customer support bot answering basic FAQs from product documentation. [4]</li>
+</ul>
+<h2 id="deep-dive-rag-as-a-tool">Deep Dive: RAG as a Tool</h2>
+<p>When RAG is treated as a tool, the LLM is initialized with an available capability—usually a function defined with a semantic schema (e.g., search_company_knowledge_base(query: str)). [1, 7]</p>
+<ul>
+<li>How it works: The user asks a complex question. The LLM acts as an autonomous router. It reviews its available tools, realizes it needs external information, and generates a structured tool call. Once the application executes the search and returns the text, the LLM reviews it. If the text is insufficient, the LLM hits the tool again with a different query. [2, 3, 4, 8]</li>
+<li>The advantage: It enables multi-hop reasoning. The model can query the sales database tool first, analyze the data, and then call the compliance RAG tool to perform the cross-comparison natively. [4, 9]</li>
+<li>Best use case: Complex, open-ended research workflows, financial analysis spanning multiple documents, or situations where the system must seamlessly pivot between reading documents and executing live APIs. [4, 9]</li>
+</ul>
+<hr>
+<p>If you are trying to decide which pattern to implement for your project, let me know:</p>
+<ul>
+<li>What type of data are you searching through? (e.g., structured SQL databases, unstructured PDFs, live APIs?)</li>
+<li>How complex are the typical user questions?</li>
+<li>Are you optimizing for lowest latency/cost or highest accuracy on hard tasks?</li>
+</ul>
+<p>I can provide a tailored code outline or architecture recommendation based on your choices.</p>
+<p>[1] <a href="https://blog.gitbutler.com/mcp-vs-rag">https://blog.gitbutler.com</a>
+[2] <a href="https://arxiv.org/html/2601.07711v1">https://arxiv.org</a>
+[3] <a href="https://developer.nvidia.com/blog/traditional-rag-vs-agentic-rag-why-ai-agents-need-dynamic-knowledge-to-get-smarter/">https://developer.nvidia.com</a>
+[4] <a href="https://www.progress.com/blogs/agentic-rag-vs-traditional-rag">https://www.progress.com</a>
+[5] <a href="https://medium.com/@gaddam.rahul.kumar/agentic-rag-vs-traditional-rag-b1a156f72167">https://medium.com</a>
+[6] <a href="https://www.mindstudio.ai/blog/agentic-rag-vs-standard-rag-multi-layer-retrieval">https://www.mindstudio.ai</a>
+[7] <a href="https://www.pontil.com/blog/rag-vs-tool-calling-which-one-your-agent-actually-needs">https://www.pontil.com</a>
+[8] <a href="https://www.linkedin.com/posts/allenheltondev_when-should-you-rely-on-rag-vs-making-a-tool-activity-7377378698741673984-IDSy">https://www.linkedin.com</a>
+[9] <a href="https://medium.com/@sumeet.pardeshi.online/rag-vs-tool-use-for-llms-the-ultimate-guide-to-choosing-the-right-approach-in-2025-c5c06b0922f6">https://medium.com</a></p>
+</div></article></main><footer></footer></body></html>
